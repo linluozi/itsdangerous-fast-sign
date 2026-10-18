@@ -1,0 +1,23 @@
+{
+  "python": "3.13.14",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "target_ms": 20.0,
+  "rounds": 3,
+  "cases": [
+    {
+      "case": "tds-dumps-small",
+      "op": "dumps",
+      "iterations": 1287,
+      "a_us": 42.63465423439182,
+      "b_us": 42.84615384583445,
+      "ratio_median": 1.0070206989353483,
+      "ratio_min": 0.9950637433594709,
+      "ratio_max": 1.1477245755490895,
+      "speeds": [
+        "1.0070",
+        "1.1477",
+        "0.9951"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "dumps-medium": {
+    "upstream": 48.0,
+    "optimized": 35.0
+  },
+  "loads-medium": {
+    "upstream": 59.0,
+    "optimized": 40.0
+  }
+}

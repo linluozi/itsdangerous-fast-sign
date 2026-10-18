@@ -1,0 +1,43 @@
+{
+  "python": "3.13.14",
+  "machine": "AMD64",
+  "rounds": 5,
+  "target_ms": 5.0,
+  "upstream": "E:\\WorkBuddy-Work\\WorkBuddy-0\\_opt_round16\\work",
+  "optimized": "E:\\WorkBuddy-Work\\WorkBuddy-0\\_opt_round16\\work",
+  "mode": "A/B",
+  "cases": [
+    {
+      "case": "tds-dumps-small",
+      "op": "dumps",
+      "iterations": 508,
+      "upstream_median_us": 9.712598426187297,
+      "optimized_median_us": 9.952362205243787,
+      "speedup_median": 1.0042587167149273,
+      "speedup_p25": 0.8993672302862753,
+      "speedup_p75": 1.067196610870861,
+      "median_saving_us": 0.04094487856376894,
+      "speedups": [
+        1.116,
+        0.9509,
+        1.0184,
+        0.8479,
+        1.0043
+      ],
+      "upstream_us": [
+        11.107,
+        9.703,
+        9.801,
+        9.713,
+        9.655
+      ],
+      "optimized_us": [
+        9.952,
+        10.204,
+        9.624,
+        11.455,
+        9.614
+      ]
+    }
+  ]
+}
