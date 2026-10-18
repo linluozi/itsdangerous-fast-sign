@@ -50,24 +50,38 @@ harness.*
 git clone https://github.com/linluozi/itsdangerous-fast-sign.git
 cd itsdangerous-fast-sign
 
-# run the full suite: 297 upstream tests + 355 differential tests
-python -m venv .venv && . .venv/bin/activate      # Windows: .venv\Scripts\activate
+# 297 upstream tests (this build ships no upstream checkout, so the
+# differential suite skips itself here)
+python -m venv .venv && . .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install pytest freezegun
-PYTHONPATH=src UPSTREAM_DIR=upstream python -m pytest tests -q
-# 652 passed
+python -m pytest tests -q                        # 297 passed, 1 skipped
 ```
 
-Use it exactly like upstream:
+Run the differential suite too (it compares this build against an unmodified
+upstream checkout, file by file, token by token):
+
+```bash
+git clone https://github.com/pallets/itsdangerous.git ../upstream-itsdangerous
+git -C ../upstream-itsdangerous checkout 672971d6a2ef9f85151e53283113f33d642dabd
+UPSTREAM_DIR=../upstream-itsdangerous python -m pytest tests -q   # 652 passed
+```
+
+Use it exactly like upstream — with `src/` on the path (src layout, nothing is
+installed implicitly):
+
+```bash
+PYTHONPATH=src python -c "import itsdangerous; print(itsdangerous.__file__)"
+```
 
 ```python
 from itsdangerous import URLSafeTimedSerializer
 
 s = URLSafeTimedSerializer("secret-key")
-token = s.dumps({"user_id": 42})        # same bytes as upstream, ~23% less CPU
+token = s.dumps({"user_id": 42})        # same bytes as upstream, less CPU
 data = s.loads(token, max_age=3600)
 ```
 
-Install as a normal package (optional):
+Install it as a normal package (optional):
 
 ```bash
 pip install .        # installs the "itsdangerous" name from this checkout
@@ -75,10 +89,6 @@ pip install .        # installs the "itsdangerous" name from this checkout
 
 > `pip install .` replaces an installed upstream `itsdangerous` in the same
 > environment; uninstall it to go back to the PyPI release.
-
-Want to call it from your own code without installing? Point `sys.path` at
-`src/` — the package directory is named `itsdangerous`, so `import itsdangerous`
-picks up this build first.
 
 ---
 
