@@ -336,9 +336,12 @@ class Serializer(t.Generic[_TSerialized]):
             salt = self.salt
 
         # ``str`` and ``bytes`` salts that mean the same thing share an entry,
-        # since ``Signer`` converts the salt with ``want_bytes`` anyway.
+        # since ``Signer`` converts the salt with ``want_bytes`` anyway.  A
+        # ``None`` salt is its own key: ``want_bytes`` would return it
+        # unchanged, so spelling that out costs nothing and keeps the cache
+        # key typed as ``bytes | None``.
         try:
-            cache_key: bytes | None = want_bytes(salt)  # type: ignore[arg-type]
+            cache_key: bytes | None = None if salt is None else want_bytes(salt)
         except (UnicodeEncodeError, TypeError):
             # Not representable as bytes (e.g. a non-UTF-8 bytes-ish object);
             # skip caching rather than risk two salts colliding.
@@ -347,7 +350,7 @@ class Serializer(t.Generic[_TSerialized]):
         cache = self._signer_cache
 
         try:
-            return cache[cache_key]  # type: ignore[index]
+            return cache[cache_key]
         except KeyError:
             pass
 
@@ -389,7 +392,11 @@ class Serializer(t.Generic[_TSerialized]):
 
             for secret_key in self.secret_keys:
                 try:
-                    key = (fallback, secret_key, want_bytes(salt))
+                    key = (
+                        fallback,
+                        secret_key,
+                        None if salt is None else want_bytes(salt),
+                    )
                 except (TypeError, UnicodeEncodeError):
                     yield fallback(secret_key, salt=salt, **kwargs)
                     continue

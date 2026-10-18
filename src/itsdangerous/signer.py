@@ -52,7 +52,7 @@ def _collect_digest_factories() -> list[tuple[t.Any, int]]:
 
         factory = getattr(hashlib, name, None)
 
-        if not isinstance(factory, _HASH_CONSTRUCTOR):
+        if factory is None or not isinstance(factory, _HASH_CONSTRUCTOR):
             continue
 
         try:
@@ -136,8 +136,12 @@ def _hmac_digest(key: bytes, msg: bytes, digest_method: t.Any) -> bytes:
     if inner_pad is None:
         return hmac.new(key, msg=msg, digestmod=digest_method).digest()
 
-    digest = resolved
-    return digest(outer_pad + digest(inner_pad + msg).digest()).digest()
+    # ``resolved`` is ``Any`` (it is looked up in a memo dict keyed by
+    # arbitrary objects), so the annotated local pins the return type without
+    # adding a runtime ``cast`` call to the signing hot path.
+    digest: t.Any = resolved
+    signature: bytes = digest(outer_pad + digest(inner_pad + msg).digest()).digest()
+    return signature
 
 
 def _pad_key(key: bytes, digest: t.Any) -> tuple[bytes | None, bytes | None]:

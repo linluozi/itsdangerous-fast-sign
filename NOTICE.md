@@ -24,6 +24,7 @@ Every file outside the list below is **byte-for-byte identical** to that commit
 | `src/itsdangerous/serializer.py` | `make_signer()` and `iter_unsigners()` reuse signer instances per configuration |
 | `src/itsdangerous/encoding.py` | `base64_decode()` decodes in one pass (`translate` + `a2b_base64`) |
 | `src/itsdangerous/url_safe.py` | `dump_payload()` skips a zlib attempt that provably cannot save a byte |
+| `src/itsdangerous/_ablation.pyi` | Type stub for the switch module that `bench/ablation_build.py` generates inside the ablation trees; in a normal build the imports raise `ImportError` and every optimisation stays on |
 
 ## Added files
 
